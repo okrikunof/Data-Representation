@@ -12,8 +12,8 @@ public class Stack {
         top = -1;
     }
 
-    public void Push(ListElement element) {
-        stack[++top] = element;
+    public void Push(ListElement x) {
+        stack[++top] = x;
     }
 
     public ListElement Pop() {
