@@ -1,4 +1,4 @@
-package CursorList;
+package Lists.CursorList;
 
 import ListElement.ListElement;
 

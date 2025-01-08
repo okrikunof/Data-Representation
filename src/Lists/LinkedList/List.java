@@ -1,9 +1,9 @@
-package LinkedList;
+package Lists.LinkedList;
 
 import ListElement.ListElement;
 
 /**
- * Класс LinkedList предназначен для работы со списком элементов, хранящихся в узлах
+ * Класс Lists.LinkedList предназначен для работы со списком элементов, хранящихся в узлах
  */
 public class List {
 

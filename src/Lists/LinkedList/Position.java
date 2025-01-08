@@ -1,4 +1,4 @@
-package LinkedList;
+package Lists.LinkedList;
 
 /** Класс позиции для связного списка */
 public class Position {

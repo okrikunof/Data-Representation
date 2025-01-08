@@ -1,4 +1,4 @@
-package DoubleLinkedList;
+package Lists.DoubleLinkedList;
 
 import ListElement.ListElement;
 

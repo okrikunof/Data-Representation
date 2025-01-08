@@ -1,9 +1,9 @@
-package ArrayList;
+package Lists.ArrayList;
 
 import ListElement.ListElement;
 
 /**
- * Класс ArrayList предназначен для работы со списком элементов, хранящихся в массиве
+ * Класс Lists.ArrayList предназначен для работы со списком элементов, хранящихся в массиве
  */
 public class List {
 

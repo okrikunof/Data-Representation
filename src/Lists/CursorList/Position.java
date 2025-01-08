@@ -1,4 +1,4 @@
-package CursorList;
+package Lists.CursorList;
 
 /**
  * Класс позиции для списка на курсорах

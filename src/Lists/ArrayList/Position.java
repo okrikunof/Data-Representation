@@ -1,4 +1,4 @@
-package ArrayList;
+package Lists.ArrayList;
 
 /**
  * Класс Position, который отвечает за позицию в списке на массиве
