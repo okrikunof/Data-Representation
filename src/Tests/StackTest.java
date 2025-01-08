@@ -2,22 +2,23 @@ package Tests;
 
 import ListElement.ListElement;
 
-//import Stack.ArrayStack.*;
-//import Stack.ListStack.*;
-import Stacks.AdtStack.*;
+import Stacks.ArrayStack.*;
+//import Stacks.ListStack.*;
+//import Stacks.AdtStack.*;
 
 public class StackTest {
     public static void Test() {
         Stack stack = new Stack();
-        stack.Push(new ListElement("Sigma", "Boy"));
+
+        stack.Push(new ListElement("Paris", "France"));
         stack.Top().Print();
-        stack.Push(new ListElement("Mark", "Peter"));
+        stack.Push(new ListElement("London", "England"));
         stack.Top().Print();
-        stack.Push(new ListElement("Volodya", "Moscow"));
+        stack.Push(new ListElement("Moscow", "Russia"));
         stack.Top().Print();
-        stack.Push(new ListElement("Kirill", "Kazan"));
+        stack.Push(new ListElement("Berlin", "Germany"));
         stack.Top().Print();
-        stack.Push(new ListElement("Pharan", "Paran"));
+        stack.Push(new ListElement("Sofia", "Bulgaria"));
         stack.Top().Print();
 
         System.out.println("\nВынимаем элементы из стека");

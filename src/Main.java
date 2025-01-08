@@ -30,7 +30,8 @@ public class Main {
 //        System.out.println("\n");
 //
 //        list.PrintList();
-        StackTest.Test();
+//        StackTest.Test();
+        QueueTest.Test();
     }
 
     public static void RemoveDuplicates(List list) {
