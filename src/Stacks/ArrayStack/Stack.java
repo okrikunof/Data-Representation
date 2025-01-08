@@ -1,4 +1,4 @@
-package Stack.ArrayStack;
+package Stacks.ArrayStack;
 
 import ListElement.ListElement;
 
