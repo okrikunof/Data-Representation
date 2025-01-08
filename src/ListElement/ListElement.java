@@ -2,8 +2,8 @@ package ListElement;
 
 /** Класс, который представляет содержимое списка — открытку с именем и адрессом */
 public class ListElement {
-    private final char[] name;    // имя (до 20 символов)
-    private final char[] address; // адрес (до 50 символов)
+    private char[] name;    // имя (до 20 символов)
+    private char[] address; // адрес (до 50 символов)
 
     /** Конструктор, инициализирующий открытку с именем и адресом */
     public ListElement(String addName, String addAddress) {
@@ -62,6 +62,22 @@ public class ListElement {
         }
     }
 
+    public char[] GetName() {
+        return this.name;
+    }
+
+    public char[] GetAddress() {
+        return this.address;
+    }
+
+    public void SetName(char[] name) {
+        this.name = name;
+    }
+
+    public void SetAddress(char[] address) {
+        this.address = address;
+    }
+
     // Метод для вывод содержимого на экран
     public void Print() {
         System.out.print("Name: ");
@@ -102,6 +118,20 @@ public class ListElement {
             }
             // Если достигнут конец строки '\0' у обоих
             if (this.address[i] == '\0' && compareElement.address[i] == '\0') {
+                break; // завершить цикл, если обе строки закончились
+            }
+        }
+
+        return true;
+    }
+
+    public boolean Equals(char[] compareElement) {
+        for (int i = 0; i < 20; i++) {
+            if (this.name[i] != compareElement[i]) {
+                return false;
+            }
+            // Если достигнут конец строки '\0' у обоих
+            if (this.name[i] == '\0' && compareElement[i] == '\0') {
                 break; // завершить цикл, если обе строки закончились
             }
         }
