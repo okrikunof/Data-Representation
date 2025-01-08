@@ -62,5 +62,7 @@ public class Map {
             next.data.Print();
             next = next.next;
         }
+
+        System.out.println();
     }
 }
