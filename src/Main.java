@@ -1,8 +1,8 @@
 import ListElement.*;
-import ArrayList.*;
-//import LinkedList.*;
-//import DoubleLinkedList.*;
-//import CursorList.*;
+import Lists.ArrayList.*;
+//import Lists.LinkedList.*;
+//import Lists.DoubleLinkedList.*;
+//import Lists.CursorList.*;
 
 
 public class Main {
