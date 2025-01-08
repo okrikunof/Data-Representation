@@ -31,7 +31,8 @@ public class Main {
 //
 //        list.PrintList();
 //        StackTest.Test();
-        QueueTest.Test();
+//        QueueTest.Test();
+        MapTest.Test();
     }
 
     public static void RemoveDuplicates(List list) {
