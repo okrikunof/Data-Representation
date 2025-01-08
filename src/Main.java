@@ -1,4 +1,7 @@
 import ListElement.*;
+
+import Tests.*;
+
 import Lists.ArrayList.*;
 //import Lists.LinkedList.*;
 //import Lists.DoubleLinkedList.*;
@@ -7,25 +10,27 @@ import Lists.ArrayList.*;
 
 public class Main {
     public static void main(String[] args) {
-        List list = new List();
-        list.Insert(new ListElement("1", "A"), list.First());
-        list.Insert(new ListElement("2", "B"), list.End());
-        list.Insert(new ListElement("2", "B"), list.End());
-        list.Insert(new ListElement("2", "B"), list.End());
-        list.Insert(new ListElement("2", "B"), list.End());
-        list.Insert(new ListElement("3", "C"), list.First());
-        list.Insert(new ListElement("1", "A"), list.End());
-        list.Insert(new ListElement("2", "B"), list.End());
-        list.Insert(new ListElement("2", "B"), list.End());
-        list.Insert(new ListElement("2", "B"), list.End());
-
-        list.PrintList();
-
-        RemoveDuplicates(list);
-
-        System.out.println("\n");
-
-        list.PrintList();
+//        List list = new List();
+//
+//        list.Insert(new ListElement("1", "A"), list.First());
+//        list.Insert(new ListElement("2", "B"), list.End());
+//        list.Insert(new ListElement("2", "B"), list.End());
+//        list.Insert(new ListElement("2", "B"), list.End());
+//        list.Insert(new ListElement("2", "B"), list.End());
+//        list.Insert(new ListElement("3", "C"), list.First());
+//        list.Insert(new ListElement("1", "A"), list.End());
+//        list.Insert(new ListElement("2", "B"), list.End());
+//        list.Insert(new ListElement("2", "B"), list.End());
+//        list.Insert(new ListElement("2", "B"), list.End());
+//
+//        list.PrintList();
+//
+//        RemoveDuplicates(list);
+//
+//        System.out.println("\n");
+//
+//        list.PrintList();
+        StackTest.Test();
     }
 
     public static void RemoveDuplicates(List list) {
