@@ -2,8 +2,8 @@ package Tests;
 
 import ListElement.*;
 
-import Maps.LinkedListMap.*;
-//import Maps.AdtMap.*;
+//import Maps.LinkedListMap.*;
+import Maps.AdtMap.*;
 
 public class MapTest {
     public static void Test() {

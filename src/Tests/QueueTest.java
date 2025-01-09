@@ -21,7 +21,8 @@ public class QueueTest {
         queue.Enqueue(new ListElement("Sofia", "Bulgaria"));
         queue.Front().Print();
 
-        System.out.println("\nВынимаем элементы из очереди");
+        System.out.println();
+        System.out.println("Достаем элементы");
         while(!queue.Empty()){
             queue.Dequeue().Print();
         }

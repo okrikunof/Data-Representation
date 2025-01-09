@@ -2,38 +2,51 @@ package Lists.CursorList;
 
 import ListElement.ListElement;
 
+/**
+ * Класс Lists.CursorList реализует список с использованием массива в качестве памяти для узлов.
+ * Каждый узел содержит данные и указатель на следующий элемент списка.
+ */
 public class List {
     private int head = -1; // Указатель на первый элемент списка
     private static int space = 0; // Указатель на первый свободный элемент
     private static final int SIZE = 10; // Размер массива памяти
     private static Node[] memoryPool; // Массив для хранения узлов списка
 
+    // Статический блок инициализации для настройки памяти
     static {
-        // Инициализация массива узлов
-        memoryPool = new Node[10];
+        memoryPool = new Node[10]; // Инициализация массива узлов
         for (int i = 0; i < SIZE; i++) {
             memoryPool[i] = new Node(i + 1); // Каждый узел указывает на следующий
         }
         memoryPool[SIZE - 1] = new Node(0); // Последний узел указывает на начало
     }
 
-    // Метод для получения индекса предыдущего элемента списка
+    /**
+     * Метод prev находит индекс предыдущего узла в списке.
+     *
+     * @param n индекс узла, для которого нужно найти предыдущий
+     * @return индекс предыдущего узла или -1, если узел не найден
+     */
     private int prev(int n) {
         int curr = head;
         int tmp = -1;
 
         // Перебираем элементы до нахождения текущего
         while (curr != -1) {
-            if (n == curr)
-                return tmp;
-
+            if (n == curr) {
+                return tmp; // Возвращаем индекс предыдущего узла
+            }
             tmp = curr;
             curr = memoryPool[curr].next;
         }
-        return -1; // Если элемент не найден, возвращаем -1
+        return -1; // Если элемент не найден
     }
 
-    // Метод для получения индекса предпоследнего элемента списка
+    /**
+     * Метод preEnd находит индекс предпоследнего узла в списке.
+     *
+     * @return индекс предпоследнего узла или -1, если список пуст
+     */
     private int preEnd() {
         int curr = head;
         int tmp = -1;
@@ -47,34 +60,47 @@ public class List {
         return tmp; // Возвращаем индекс предпоследнего элемента
     }
 
-    // Поиск элемента по значению
+    /**
+     * Метод findElement ищет позицию узла с заданным значением.
+     *
+     * @param x элемент для поиска
+     * @return позиция узла или -1, если элемент не найден
+     */
     private Position findElement(ListElement x) {
         int current = head;
 
         // Перебор всех элементов до нахождения совпадения
         while (current != -1) {
-            if (memoryPool[current].data.equals(x)) return new Position(current);
+            if (memoryPool[current].data.equals(x)) {
+                return new Position(current); // Возвращаем найденную позицию
+            }
             current = memoryPool[current].next;
         }
         return new Position(-1); // Возвращаем -1, если элемент не найден
     }
 
-    // Вставка нового элемента в список
+    /**
+     * Метод Insert добавляет новый элемент в список.
+     *
+     * @param x элемент для вставки
+     * @param p позиция, перед которой нужно вставить новый элемент
+     */
     public void Insert(ListElement x, Position p) {
-        // Проверяем, есть ли свободное место в массиве
-        if (space == -1) throw new RuntimeException("List is full");
+        // Проверяем наличие свободного места
+        if (space == -1) {
+            throw new RuntimeException("List is full");
+        }
 
-        // Если позиция - конец списка или список пуст
+        // Вставка в конец списка или в пустой список
         if (p.position == -1) {
-            if (head == -1) { // Вставка в пустой список
+            if (head == -1) { // Если список пустой
                 head = 0;
                 memoryPool[head].data = new ListElement(x);
                 memoryPool[head].next = -1;
                 space++;
             } else {
-                // Вставка в конец непустого списка
                 int last = preEnd(); // Находим последний элемент
-                int nextSpace = memoryPool[space].next; // Сохраняем ссылку на следующий свободный
+                int nextSpace = memoryPool[space].next; // Сохраняем следующий свободный
                 memoryPool[space].data = new ListElement(x);
                 memoryPool[space].next = -1;
                 memoryPool[last].next = space; // Обновляем указатель последнего
@@ -94,7 +120,9 @@ public class List {
         }
 
         // Вставка элемента в середину списка
-        if (prev(p.position) == -1) return; // Если позиция не найдена, выходим
+        if (prev(p.position) == -1) {
+            return; // Если позиция не найдена, выходим
+        }
 
         int nextSpace = memoryPool[space].next;
         memoryPool[space].data = new ListElement(memoryPool[p.position].data); // Копируем данные текущей позиции
@@ -104,20 +132,25 @@ public class List {
         space = nextSpace; // Переносим указатель на свободное место
     }
 
-    // Удаление элемента из списка
+    /**
+     * Метод Delete удаляет элемент из списка.
+     *
+     * @param p позиция элемента для удаления
+     */
     public void Delete(Position p) {
-        // Если список пуст, ничего не делаем
-        if (head == -1) return;
+        if (head == -1) {
+            return; // Если список пуст, ничего не делаем
+        }
 
-        // Удаление первого элемента списка
+        // Удаление первого элемента
         if (p.position == head) {
             head = memoryPool[p.position].next; // Устанавливаем голову на следующий элемент
-            memoryPool[p.position].next = space; // Добавляем старую голову в свободные места
+            memoryPool[p.position].next = space; // Возвращаем старую голову в свободные места
             space = p.position; // Обновляем указатель на свободное место
             return;
         }
 
-        // Удаление элемента из середины или конца списка
+        // Удаление элемента из середины или конца
         int prev = prev(p.position); // Находим предыдущий элемент
         if (prev != -1) {
             int current = memoryPool[prev].next;

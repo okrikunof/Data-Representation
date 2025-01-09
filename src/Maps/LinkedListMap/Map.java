@@ -2,67 +2,100 @@ package Maps.LinkedListMap;
 
 import ListElement.*;
 
+/**
+ * Класс Map представляет собой отображение, реализованное с помощью связного списка.
+ * Каждый элемент отображения представляет собой пару "ключ-значение", где ключом является имя, а значением адрес.
+ */
 public class Map {
-    private Node head;
+    private Node head; // Указатель на первый узел в списке, представляющем карту
 
+    /**
+     * Конструктор Map.
+     * Инициализирует пустую карту, устанавливая head в null.
+     */
     public Map() {
         this.head = null;
     }
 
+    /**
+     * Метод для поиска узла по ключу.
+     * Перебирает все элементы карты, чтобы найти узел с указанным ключом.
+     *
+     * @param x элемент, ключ которого нужно найти в карте
+     * @return найденный узел или null, если ключ не найден
+     */
     private Node findViaKey(ListElement x) {
-        Node key = head;
+        Node key = head; // Начинаем с головы списка
         while (key != null) {
+            // Если ключ найден, возвращаем узел
             if (key.data.Equals(x.GetName())) {
                 return key;
             }
-            key = key.next;
+            key = key.next; // Переходим к следующему узлу
         }
-        return null;
+        return null; // Если ключ не найден, возвращаем null
     }
 
+    /**
+     * Метод для очистки карты.
+     * Устанавливает head в null, effectively очищая все элементы карты.
+     */
     public void MakeNull() {
-        this.head = null;
+        this.head = null; // Очищаем карту, устанавливая голову в null
     }
 
+    /**
+     * Метод для добавления или обновления элемента в карте.
+     * Если ключ уже существует, обновляет значение, иначе вставляет новый элемент в начало списка.
+     *
+     * @param x элемент, который нужно добавить или обновить в карте
+     */
     public void Assign(ListElement x) {
-        // 1. Если список пустой создаем голову
+        // 1. Если список пустой, создаем новый узел и присваиваем его как голову
         if (head == null) {
-           head = new Node(x, null);
-           return;
+            head = new Node(x, null); // Присваиваем x как первый элемент списка
+            return;
         }
 
-        // 2. Ищем по ключу
+        // 2. Ищем узел по ключу
         Node node = findViaKey(x);
         if (node != null) {
-            node.SetAddress(x);
+            node.SetAddress(x); // Если ключ найден, обновляем его значение
             return;
         }
 
-        // 3. Если ключа нет, то вставляем после head
-        if (head == null) {
-            head.next = new Node(x, null);
-            return;
-        }
-
-        head.next = new Node(x, head.next);
+        // 3. Если ключ не найден, вставляем новый узел в начало списка
+        head.next = new Node(x, head.next); // Новый элемент вставляется после головы
     }
 
+    /**
+     * Метод для вычисления значения по ключу.
+     * Если элемент с заданным ключом существует, обновляет его значение и возвращает true.
+     * Если элемент не найден, возвращает false.
+     *
+     * @param x элемент, значение которого нужно вычислить
+     * @return true, если элемент найден и обновлен, false если не найден
+     */
     public boolean Compute(ListElement x) {
         Node node = findViaKey(x);
         if (node == null) {
-            return false;
+            return false; // Если ключ не найден, возвращаем false
         }
-        node.SetAddress(x);
-        return true;
+        node.SetAddress(x); // Обновляем значение по ключу
+        return true; // Возвращаем true, если обновление прошло успешно
     }
 
+    /**
+     * Метод для печати всех элементов карты.
+     * Перебирает все узлы и вызывает метод Print для каждого элемента.
+     */
     public void Print() {
-        Node next = head;
+        Node next = head; // Начинаем с головы списка
         while (next != null) {
-            next.data.Print();
-            next = next.next;
+            next.data.Print(); // Печатаем данные текущего узла
+            next = next.next; // Переходим к следующему узлу
         }
 
-        System.out.println();
+        System.out.println(); // Печатаем новую строку после вывода всех элементов
     }
 }

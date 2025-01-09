@@ -2,57 +2,78 @@ package Lists.DoubleLinkedList;
 
 import ListElement.ListElement;
 
+/**
+ * Класс Lists.DoubleLinkedList представляет собой реализацию двусвязного списка.
+ */
 public class List {
-    private Node head;
-    private Node tail;
+    private Node head; // Указатель на первый элемент списка
+    private Node tail; // Указатель на последний элемент списка
 
-    // Конструктор для инициализации пустого списка
-    public List(){
+    /**
+     * Конструктор для инициализации пустого списка.
+     * Изначально указатели head и tail равны null.
+     */
+    public List() {
         head = null;
         tail = null;
     }
 
-    // Проверяет, находится ли заданная позиция в списке
-    private boolean inList(Position p){
+    /**
+     * Метод, проверяющий, находится ли заданная позиция в списке.
+     *
+     * @param p позиция для проверки
+     * @return true, если позиция присутствует в списке; иначе false
+     */
+    private boolean inList(Position p) {
+        // Проходим по всем узлам списка и сравниваем их с заданной позицией
         Node tmp = head;
-
-        // Перебираем все элементы списка от начала до конца
-        while(tmp != null){
-            if (tmp.equals(p.node)) return true; // Если нашли совпадение, возвращаем true
+        while (tmp != null) {
+            if (tmp.equals(p.node)) return true; // Позиция найдена
             tmp = tmp.next;
         }
-        return false; // Если позиция не найдена, возвращаем false
+        return false; // Позиция не найдена
     }
 
-    // Вспомогательный метод для поиска узла по значению
-    private Node findNode(ListElement listElement){
+    /**
+     * Вспомогательный метод для поиска узла по значению.
+     *
+     * @param listElement элемент для поиска
+     * @return узел, содержащий указанный элемент, или null, если элемент не найден
+     */
+    private Node findNode(ListElement listElement) {
+        // Перебираем узлы, пока не найдем совпадение по значению
         Node curr = head;
-        while(curr!=null){
-            if(curr.data.equals(listElement))
-                return curr; // Возвращаем узел, если он найден
-            curr=curr.next;
+        while (curr != null) {
+            if (curr.data.equals(listElement)) {
+                return curr; // Узел найден
+            }
+            curr = curr.next;
         }
-        return null; // Если элемент не найден, возвращаем null
+        return null; // Элемент отсутствует в списке
     }
 
-    // Вставляет новый элемент в заданную позицию
+    /**
+     * Метод для вставки нового элемента в заданную позицию.
+     *
+     * @param x элемент для вставки
+     * @param p позиция, перед которой нужно вставить новый элемент
+     */
     public void Insert(ListElement x, Position p) {
-
-        // Если список пустой или содержит только один элемент
-        if(head == tail){
-            if(p.node == null){ // Добавление в конец пустого списка
-                if(head == null){ // Если список полностью пустой
-                    head = new Node(x);
-                    tail = head;
+        // Обработка случая с пустым списком или списком из одного элемента
+        if (head == tail) {
+            if (p.node == null) { // Вставка в пустой список
+                if (head == null) {
+                    head = new Node(x); // Создаем новый узел и назначаем его первым
+                    tail = head; // Первый элемент одновременно является и последним
                     return;
                 }
-                // Если в списке есть один элемент, добавляем новый в конец
+                // Добавление второго элемента в список
                 tail = new Node(x);
-                tail.previous = head;
-                head.next = tail;
+                tail.previous = head; // Указываем, что tail следует за head
+                head.next = tail; // Указываем, что head ссылается на tail
                 return;
             }
-            // Вставка нового элемента на место существующего в списке с одним элементом
+            // Обновление данных первого элемента
             head.next = new Node(head.data);
             head.data = new ListElement(x);
             tail = head.next;
@@ -60,169 +81,179 @@ public class List {
             return;
         }
 
-        // Вставка нового элемента перед первым в списке
-        if(p.node == head){
+        // Вставка перед первым элементом
+        if (p.node == head) {
             Node curr = p.node;
             Node nodeX = new Node(x);
             curr.previous = nodeX;
             nodeX.next = curr;
-            head = nodeX; // Новый элемент становится головой списка
+            head = nodeX; // Новый узел становится первым
             return;
         }
 
-        // Вставка нового элемента перед последним в списке
-        if(p.node == tail){
+        // Вставка перед последним элементом
+        if (p.node == tail) {
             Node currPrev = tail.previous;
-            currPrev.next = new Node(x); // Новый узел вставляется между предпоследним и последним
+            currPrev.next = new Node(x);
             currPrev.next.previous = currPrev;
             currPrev.next = tail;
             tail.previous = currPrev.next;
             return;
         }
 
-        // Добавление нового элемента в конец списка
-        if(p.node == null){
+        // Вставка в конец списка
+        if (p.node == null) {
             Node tmp = new Node(x);
             tail.next = tmp;
             tmp.previous = tail;
-            tail = tmp; // Новый элемент становится хвостом списка
+            tail = tmp; // Обновляем указатель на последний элемент
             return;
         }
 
-        // Вставка нового элемента в середину списка
-        Node tmp;
-        if(inList(p)) tmp = p.node;
-        else return;
-
-        Node next = tmp.next;
-        next.next = new Node(x); // Связываем новый узел с последующими
-        next.next.previous = next;
-        next.next = tmp;
-        tmp.previous = tmp.next; // Обновляем связи предыдущего элемента
+        // Вставка в середину списка
+        if (inList(p)) {
+            Node tmp = p.node;
+            Node next = tmp.next;
+            next.next = new Node(x); // Создаем новый узел и связываем его с текущим и следующим
+            next.next.previous = next;
+            next.next = tmp;
+            tmp.previous = tmp.next;
+        }
     }
 
-    // Удаляет элемент из списка в указанной позиции
+    /**
+     * Метод для удаления элемента из списка по позиции.
+     *
+     * @param p позиция элемента для удаления
+     */
     public void Delete(Position p) {
-
-        // Если позиция не находится в списке, выбрасываем исключение
-        if(!inList(p)){
+        if (!inList(p)) {
             throw new RuntimeException("Invalid position");
         }
-        // Если список пуст или позиция некорректная
-        if(head==null || tail==null || p.node==null){
+        if (head == null || tail == null || p.node == null) {
             throw new RuntimeException("List is empty");
         }
 
         // Удаление единственного элемента в списке
-        if (tail==head && p.node==head){
-            head=null;
-            tail=null;
+        if (tail == head && p.node == head) {
+            head = null;
+            tail = null;
         }
-
-        // Удаление первого элемента в списке
-        if(p.node==head){
-            head=head.next;
+        // Удаление первого элемента
+        else if (p.node == head) {
+            head = head.next;
             head.previous = null;
-            p.node = head; // Обновляем указатель позиции
-            return;
+            p.node = head;
         }
-
-        // Удаление последнего элемента в списке
-        if(p.node == tail){
+        // Удаление последнего элемента
+        else if (p.node == tail) {
             tail = tail.previous;
             tail.next = null;
-            p.node = null; // Устанавливаем текущий узел как null
-            return;
+            p.node = null;
         }
-
         // Удаление элемента из середины списка
-        if(inList(p)){
-            Node tmpNext = p.node.next; // Узел, следующий за удаляемым
-            Node tmpPrev = p.node.previous; // Узел, предшествующий удаляемому
-
-            tmpPrev.next = p.node.next; // Переподключаем соседей
+        else if (inList(p)) {
+            Node tmpNext = p.node.next;
+            Node tmpPrev = p.node.previous;
+            tmpPrev.next = tmpNext; // Перепривязываем узлы, чтобы исключить удаляемый
             tmpNext.previous = tmpPrev;
-            p.node = tmpPrev.next; // Перемещаем позицию на следующий узел
+            p.node = tmpPrev.next;
         }
-
     }
 
-    // Находит позицию элемента с заданным значением
+    /**
+     * Метод, находящий позицию элемента с заданным значением.
+     *
+     * @param x элемент для поиска
+     * @return позиция найденного элемента или null, если элемент не найден
+     */
     public Position Locate(ListElement x) {
-        if(x == null)
+        if (x == null)
             throw new RuntimeException("Invalid position");
-        return new Position(findNode(x)); // Возвращаем позицию найденного элемента
+        return new Position(findNode(x));
     }
 
-    // Возвращает элемент по позиции
+    /**
+     * Метод, возвращающий элемент по указанной позиции.
+     *
+     * @param p позиция элемента
+     * @return элемент на указанной позиции
+     * @throws RuntimeException если позиция некорректна
+     */
     public ListElement Retrieve(Position p) {
-        if(p==null || p.equals(End()))
+        if (p == null || p.equals(End()))
             throw new RuntimeException("Invalid position");
-
-        return p.node.data; // Возвращаем данные из узла
+        return p.node.data;
     }
 
-    // Возвращает позицию предыдущего элемента
-    public Position Previous(Position p){
-        if(p.node == null)
+    /**
+     * Метод, возвращающий позицию предыдущего элемента.
+     *
+     * @param p текущая позиция
+     * @return позиция предыдущего элемента
+     * @throws RuntimeException если позиция некорректна
+     */
+    public Position Previous(Position p) {
+        if (p.node == null || p.node == head)
             throw new RuntimeException("Invalid position");
-        if(p.node == head)
-            throw new RuntimeException("Invalid position");
-        else{
-            if(p.node == tail)
-                return new Position(tail.previous);
-            return new Position(p.node.previous);
-        }
+        return new Position(p.node.previous);
     }
 
-    // Возвращает позицию следующего элемента
-    public Position Next(Position p){
-        if(p.node == null) {
-            // Если текущий узел отсутствует, выбрасываем исключение
+    /**
+     * Метод, возвращающий позицию следующего элемента.
+     *
+     * @param p текущая позиция
+     * @return позиция следующего элемента
+     * @throws RuntimeException если позиция некорректна
+     */
+    public Position Next(Position p) {
+        if (p.node == null)
             throw new RuntimeException("Invalid position");
-        }
-
-        if (p.node == tail)
-            // Если текущий узел последний, возвращаем пустую позицию
-            return new Position(null);
-
-        if(p.node == head){
-            return new Position(head.next);
-        }
-
-        if (!inList(p)) throw new RuntimeException("Invalid position");
         return new Position(p.node.next);
     }
 
-    // Возвращает позицию за последним элементом
-    public Position End(){
+    /**
+     * Метод, возвращающий позицию за последним элементом.
+     *
+     * @return позиция за последним элементом
+     */
+    public Position End() {
         return new Position(null);
     }
 
-    // Возвращает позицию первого элемента
+    /**
+     * Метод, возвращающий позицию первого элемента.
+     *
+     * @return позиция первого элемента
+     */
     public Position First() {
         return new Position(head);
     }
 
-    // Очищает список и возвращает пустую позицию
-    public Position MakeNull(){
+    /**
+     * Метод, очищающий список.
+     *
+     * @return пустая позиция
+     */
+    public Position MakeNull() {
         head = null;
         tail = null;
         return new Position(null);
     }
 
-    // Печатает все элементы списка
+    /**
+     * Метод, печатающий все элементы списка.
+     * Если список пуст, выводится сообщение об этом.
+     */
     public void PrintList() {
-        if (head == null || tail == null)
+        if (head == null || tail == null) {
             System.out.println("List is empty");
-        else{
-            Node curr = head;
-            int i = 0;
-            while(curr != null){
-                i++; // Счетчик для нумерации элементов (можно использовать по необходимости)
-                curr.data.Print();
-                curr = curr.next; // Переходим к следующему узлу
-            }
+            return;
+        }
+        Node curr = head;
+        while (curr != null) {
+            curr.data.Print();
+            curr = curr.next;
         }
     }
 }

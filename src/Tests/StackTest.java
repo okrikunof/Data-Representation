@@ -21,7 +21,8 @@ public class StackTest {
         stack.Push(new ListElement("Sofia", "Bulgaria"));
         stack.Top().Print();
 
-        System.out.println("\nВынимаем элементы из стека");
+        System.out.println();
+        System.out.println("Достаем элементы");
         while(!stack.Empty()){
             stack.Pop().Print();
         }

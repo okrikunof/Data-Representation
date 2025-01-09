@@ -202,7 +202,7 @@ public class List {
      */
     public void PrintList() {
         if (last == 0) {
-            System.out.println("Список пуст");
+            System.out.println("List is empty");
             return;
         }
 
