@@ -38,15 +38,15 @@ public class PriorityQueue {
         size--;
 
         int i = 1;
-        while (true) {
+        while (2 * i <= size) {
             int left = 2 * i;
             int right = 2 * i + 1;
             int minPriority = i;
 
-            if (left <= size && priorityQueue[left] <= priorityQueue[minPriority]) {
+            if (left <= size && priorityQueue[left] < priorityQueue[minPriority]) {
                 minPriority = left;
             }
-            if (right <= size && priorityQueue[right] <= priorityQueue[minPriority]) {
+            if (right <= size && priorityQueue[right] < priorityQueue[minPriority]) {
                 minPriority = right;
             }
 
@@ -66,9 +66,20 @@ public class PriorityQueue {
     }
 
     public void Print() {
-        for (int i = 1; i <= size; i++) {
-            System.out.print(priorityQueue[i] + " ");
+        int originalSize = size;
+        int[] sortedElements = new int[originalSize];
+
+        for (int i = 0; i < originalSize; i++) {
+            sortedElements[i] = DeleteMin();
+        }
+        for (int value : sortedElements) {
+            System.out.print(value + " ");
         }
         System.out.println();
+
+        // Восстановление исходной очереди
+        for (int value : sortedElements) {
+            Insert(value);
+        }
     }
 }
