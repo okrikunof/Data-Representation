@@ -2,10 +2,10 @@ import Tests.*;
 
 public class Main {
     public static void main(String[] args) {
-//        ListTest.Test();
+        ListTest.Test();
 //        StackTest.Test();
 //        QueueTest.Test();
-        MapTest.Test();
+//        MapTest.Test();
 //        PriorityQueueTest.Test();
     }
 }

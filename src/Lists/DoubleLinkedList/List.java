@@ -3,7 +3,7 @@ package Lists.DoubleLinkedList;
 import ListElement.ListElement;
 
 /**
- * Класс Lists.DoubleLinkedList представляет собой реализацию двусвязного списка.
+ * Класс DoubleLinkedList представляет собой реализацию двусвязного списка.
  */
 public class List {
     private Node head; // Указатель на первый элемент списка
@@ -60,24 +60,24 @@ public class List {
      */
     public void Insert(ListElement x, Position p) {
         // Обработка случая с пустым списком или списком из одного элемента
-        if (head == tail) {
-            if (p.node == null) { // Вставка в пустой список
-                if (head == null) {
-                    head = new Node(x); // Создаем новый узел и назначаем его первым
-                    tail = head; // Первый элемент одновременно является и последним
-                    return;
-                }
+        if (p.node == null) {
+            // Вставка в пустой список
+            if (head == null) {
+                head = new Node(x); // Создаем новый узел и назначаем его первым
+                tail = head; // Первый элемент одновременно является и последним
+                return;
+            }
+            if (head == tail) {
                 // Добавление второго элемента в список
                 tail = new Node(x);
                 tail.previous = head; // Указываем, что tail следует за head
                 head.next = tail; // Указываем, что head ссылается на tail
                 return;
             }
-            // Обновление данных первого элемента
-            head.next = new Node(head.data);
-            head.data = new ListElement(x);
-            tail = head.next;
-            tail.previous = head;
+            Node tmp = new Node(x);
+            tail.next = tmp;
+            tmp.previous = tail;
+            tail = tmp; // Обновляем указатель на последний элемент
             return;
         }
 
@@ -101,17 +101,10 @@ public class List {
             return;
         }
 
-        // Вставка в конец списка
-        if (p.node == null) {
-            Node tmp = new Node(x);
-            tail.next = tmp;
-            tmp.previous = tail;
-            tail = tmp; // Обновляем указатель на последний элемент
-            return;
-        }
-
         // Вставка в середину списка
-        if (inList(p)) {
+        if (!inList(p)) {
+            return;
+        } else {
             Node tmp = p.node;
             Node next = tmp.next;
             next.next = new Node(x); // Создаем новый узел и связываем его с текущим и следующим
@@ -127,38 +120,46 @@ public class List {
      * @param p позиция элемента для удаления
      */
     public void Delete(Position p) {
+        if(p.node == null || head == null)
+            return;
+        //Если позиция является головой
+        if (p.node == head) {
+            //если в списке один элемент (head=tail)
+            if (head == tail) {
+                head = null;
+                tail = null;
+                return;
+            }
+            //иначе удаляем объект из головы:
+            head = p.node.next;
+            //head теперь ссылается на следующий элемент
+            head.previous = null;
+            //обнуляем ссылку previous у нового элемента головы
+            p.node = p.node.next;
+            //обновляем позицию p.node = p.node.next;
+            return;
+            //return
+        }
+        // Если позиция является хвостом
+        if (p.node == tail) {
+            //обновляем  tail, чтобы он указывал на предыдущий элемент
+            tail = p.node.previous;
+            //обнуляем ссылку next у нового хвоста (null)
+            tail.next = null;
+            //обновляем позицию p.node = p.node.next (или сразу null просто?)
+            p.node = p.node.next;
+            return;
+        }
+        //Иначе: (поиск позиции)
         if (!inList(p)) {
             throw new RuntimeException("Invalid position");
         }
-        if (head == null || tail == null || p.node == null) {
-            throw new RuntimeException("List is empty");
-        }
-
-        // Удаление единственного элемента в списке
-        if (tail == head && p.node == head) {
-            head = null;
-            tail = null;
-        }
-        // Удаление первого элемента
-        else if (p.node == head) {
-            head = head.next;
-            head.previous = null;
-            p.node = head;
-        }
-        // Удаление последнего элемента
-        else if (p.node == tail) {
-            tail = tail.previous;
-            tail.next = null;
-            p.node = null;
-        }
-        // Удаление элемента из середины списка
-        else if (inList(p)) {
-            Node tmpNext = p.node.next;
-            Node tmpPrev = p.node.previous;
-            tmpPrev.next = tmpNext; // Перепривязываем узлы, чтобы исключить удаляемый
-            tmpNext.previous = tmpPrev;
-            p.node = tmpPrev.next;
-        }
+        p.node.previous.next = p.node.next;
+        // обновляем ссылку next у предыдущего элемента (p.node.previous) так, чтобы она указывала на следующий элемент (p.node.next)
+        p.node.next.previous =  p.node.previous;
+        // обновляем previous у следуюещего на предыдущий
+        p.node = p.node.next;
+        //обновляем позицию
     }
 
     /**
@@ -168,9 +169,16 @@ public class List {
      * @return позиция найденного элемента или null, если элемент не найден
      */
     public Position Locate(ListElement x) {
-        if (x == null)
-            throw new RuntimeException("Invalid position");
-        return new Position(findNode(x));
+        Node current = head;      // Создаем временную переменную, которая = head
+
+        while (current != null) {       // Проходим по списку пока не найдем или не дойдем до конца
+            if (current.data.Equals(x)) {
+                return new Position(current);
+            }
+            current = current.next;
+        }
+
+        return new Position(null); // Если элемент не найден, возвращаем позицию после последнего узла
     }
 
     /**
@@ -181,7 +189,7 @@ public class List {
      * @throws RuntimeException если позиция некорректна
      */
     public ListElement Retrieve(Position p) {
-        if (p == null || p.equals(End()))
+        if (p == null || p.Equals(End()))
             throw new RuntimeException("Invalid position");
         return p.node.data;
     }

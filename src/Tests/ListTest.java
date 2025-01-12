@@ -2,9 +2,9 @@ package Tests;
 
 import ListElement.ListElement;
 
-import Lists.ArrayList.*;
+//import Lists.ArrayList.*;
 //import Lists.LinkedList.*;
-//import Lists.DoubleLinkedList.*;
+import Lists.DoubleLinkedList.*;
 //import Lists.CursorList.*;
 
 public class ListTest {
@@ -26,7 +26,7 @@ public class ListTest {
 
         RemoveDuplicates(list);
 
-        System.out.println("\n");
+        System.out.println("\nСписок после удаления");
 
         list.PrintList();
     }
