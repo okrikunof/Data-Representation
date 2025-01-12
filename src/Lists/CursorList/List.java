@@ -9,14 +9,14 @@ import ListElement.ListElement;
 public class List {
     private int head; // Указатель на начало списка,  -1 (пустой список)
     private static int space = 0; // Указатель на первый свободный элемент в массиве
-    private static final int LENGTH = 10; // Длина массива, которая будет использоваться для хранения элементов
-    private static Node[] array; // Массив блоков
+    private static final int LENGTH = 100; // Длина массива, которая будет использоваться для хранения элементов
+    private static Node[] array; // Массив узлов
 
     public List() {
         head=-1;
     }
     static{
-        array = new Node[10]; // Инициализация массива блоков длиной 10
+        array = new Node[10]; // Инициализация массива узлов длиной 10
         for (int i = 0; i < LENGTH; i++) {
             array[i] = new Node(i + 1); // Заполнение массива блоками с индексами
         }
@@ -28,14 +28,14 @@ public class List {
         int curr = head; // Начинаем с головы списка
         int tmp = -1; // Временная переменная для хранения предыдущего элемента
 
-        while (curr != -1) { // Пока не достигнут конец списка
-            if (n == curr) // Если текущий элемент совпадает с искомым
-                return tmp; // Возвращаем предыдущий элемент
+        while (curr != -1) {
+            if (n == curr)
+                return tmp;
 
-            tmp = curr; // Обновляем предыдущий элемент
-            curr = array[curr].next; // Переходим к следующему элементу
+            tmp = curr;
+            curr = array[curr].next;
         }
-        return -1; // Если элемент не найден, возвращаем -1
+        return -1;
     }
 
     // Метод для получения последнего элемента списка
@@ -43,23 +43,22 @@ public class List {
         int curr = head; // Начинаем с головы списка
         int tmp = -1; // Временная переменная для хранения последнего элемента
 
-        while (curr != -1) { // Пока не достигнут конец списка
-            tmp = curr; // Обновляем последний элемент
-            curr = array[curr].next; // Переходим к следующему элементу
+        while (curr != -1) {
+            tmp = curr;
+            curr = array[curr].next;
         }
 
-        return tmp; // Возвращаем последний элемент
+        return tmp;
     }
 
-    // Метод для вставки элемента в список
     public void Insert(ListElement x, Position p) {
-        // Проверка на заполненность массива
+
         if (space == -1) throw new RuntimeException();
 
         if (p.position == -1) { // Если вставляем в конец списка
             if (head == -1) { // Если список пуст
                 head = 0; // Устанавливаем голову на первый элемент
-                array[head].data = new ListElement(x); // Копируем объект в массив
+                array[head].data = new ListElement(x);
                 array[head].next = -1; // Указываем на конец списка
                 space++; // Увеличиваем количество использованных элементов
             } else { // Если список не пуст
@@ -70,7 +69,7 @@ public class List {
                 array[last].next = space; // Соединяем последний элемент с новым элементом
                 space = nextSpace; // Обновляем указатель на свободный элемент
             }
-            return; // Завершаем метод
+            return;
         }
 
         if (p.position == head) { // Если вставляем в начало списка
