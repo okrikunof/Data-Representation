@@ -7,226 +7,193 @@ import ListElement.ListElement;
  * Каждый узел содержит данные и указатель на следующий элемент списка.
  */
 public class List {
-    private int head = -1; // Указатель на первый элемент списка
-    private static int space = 0; // Указатель на первый свободный элемент
-    private static final int SIZE = 10; // Размер массива памяти
-    private static Node[] memoryPool; // Массив для хранения узлов списка
+    private int head; // Указатель на начало списка,  -1 (пустой список)
+    private static int space = 0; // Указатель на первый свободный элемент в массиве
+    private static final int LENGTH = 10; // Длина массива, которая будет использоваться для хранения элементов
+    private static Node[] array; // Массив блоков
 
-    // Статический блок инициализации для настройки памяти
-    static {
-        memoryPool = new Node[10]; // Инициализация массива узлов
-        for (int i = 0; i < SIZE; i++) {
-            memoryPool[i] = new Node(i + 1); // Каждый узел указывает на следующий
+    public List() {
+        head=-1;
+    }
+    static{
+        array = new Node[10]; // Инициализация массива блоков длиной 10
+        for (int i = 0; i < LENGTH; i++) {
+            array[i] = new Node(i + 1); // Заполнение массива блоками с индексами
         }
-        memoryPool[SIZE - 1] = new Node(0); // Последний узел указывает на начало
+        array[LENGTH - 1] = new Node(0); // Установка последнего элемента как пустого
     }
 
-    /**
-     * Метод prev находит индекс предыдущего узла в списке.
-     *
-     * @param n индекс узла, для которого нужно найти предыдущий
-     * @return индекс предыдущего узла или -1, если узел не найден
-     */
-    private int prev(int n) {
-        int curr = head;
-        int tmp = -1;
+    // Метод для получения предыдущего элемента в списке
+    private int getPrevious(int n) {
+        int curr = head; // Начинаем с головы списка
+        int tmp = -1; // Временная переменная для хранения предыдущего элемента
 
-        // Перебираем элементы до нахождения текущего
-        while (curr != -1) {
-            if (n == curr) {
-                return tmp; // Возвращаем индекс предыдущего узла
-            }
-            tmp = curr;
-            curr = memoryPool[curr].next;
+        while (curr != -1) { // Пока не достигнут конец списка
+            if (n == curr) // Если текущий элемент совпадает с искомым
+                return tmp; // Возвращаем предыдущий элемент
+
+            tmp = curr; // Обновляем предыдущий элемент
+            curr = array[curr].next; // Переходим к следующему элементу
         }
-        return -1; // Если элемент не найден
+        return -1; // Если элемент не найден, возвращаем -1
     }
 
-    /**
-     * Метод preEnd находит индекс предпоследнего узла в списке.
-     *
-     * @return индекс предпоследнего узла или -1, если список пуст
-     */
-    private int preEnd() {
-        int curr = head;
-        int tmp = -1;
+    // Метод для получения последнего элемента списка
+    private int getPreEnd() {
+        int curr = head; // Начинаем с головы списка
+        int tmp = -1; // Временная переменная для хранения последнего элемента
 
-        // Итерируем список до его конца
-        while (curr != -1) {
-            tmp = curr;
-            curr = memoryPool[curr].next;
+        while (curr != -1) { // Пока не достигнут конец списка
+            tmp = curr; // Обновляем последний элемент
+            curr = array[curr].next; // Переходим к следующему элементу
         }
 
-        return tmp; // Возвращаем индекс предпоследнего элемента
+        return tmp; // Возвращаем последний элемент
     }
 
-    /**
-     * Метод findElement ищет позицию узла с заданным значением.
-     *
-     * @param x элемент для поиска
-     * @return позиция узла или -1, если элемент не найден
-     */
-    private Position findElement(ListElement x) {
-        int current = head;
-
-        // Перебор всех элементов до нахождения совпадения
-        while (current != -1) {
-            if (memoryPool[current].data.equals(x)) {
-                return new Position(current); // Возвращаем найденную позицию
-            }
-            current = memoryPool[current].next;
-        }
-        return new Position(-1); // Возвращаем -1, если элемент не найден
-    }
-
-    /**
-     * Метод Insert добавляет новый элемент в список.
-     *
-     * @param x элемент для вставки
-     * @param p позиция, перед которой нужно вставить новый элемент
-     */
+    // Метод для вставки элемента в список
     public void Insert(ListElement x, Position p) {
-        // Проверяем наличие свободного места
-        if (space == -1) {
-            throw new RuntimeException("List is full");
-        }
+        // Проверка на заполненность массива
+        if (space == -1) throw new RuntimeException();
 
-        // Вставка в конец списка или в пустой список
-        if (p.position == -1) {
-            if (head == -1) { // Если список пустой
-                head = 0;
-                memoryPool[head].data = new ListElement(x);
-                memoryPool[head].next = -1;
-                space++;
-            } else {
-                int last = preEnd(); // Находим последний элемент
-                int nextSpace = memoryPool[space].next; // Сохраняем следующий свободный
-                memoryPool[space].data = new ListElement(x);
-                memoryPool[space].next = -1;
-                memoryPool[last].next = space; // Обновляем указатель последнего
-                space = nextSpace; // Обновляем указатель на свободное место
+        if (p.position == -1) { // Если вставляем в конец списка
+            if (head == -1) { // Если список пуст
+                head = 0; // Устанавливаем голову на первый элемент
+                array[head].data = new ListElement(x); // Копируем объект в массив
+                array[head].next = -1; // Указываем на конец списка
+                space++; // Увеличиваем количество использованных элементов
+            } else { // Если список не пуст
+                int last = getPreEnd(); // Получаем последний элемент
+                int nextSpace = array[space].next; // Получаем следующий свободный элемент
+                array[space].data = new ListElement(x); // Копируем объект в массив
+                array[space].next = -1; // Указываем на конец списка
+                array[last].next = space; // Соединяем последний элемент с новым элементом
+                space = nextSpace; // Обновляем указатель на свободный элемент
             }
-            return;
+            return; // Завершаем метод
         }
 
-        // Вставка элемента в начало списка
-        if (p.position == head) {
-            int nextSpace = memoryPool[space].next;
-            memoryPool[space].data = new ListElement(x); // Копируем данные в новое место
-            memoryPool[space].next = head; // Новый элемент указывает на старую голову
-            head = space; // Обновляем указатель головы
-            space = nextSpace;
-            return;
+        if (p.position == head) { // Если вставляем в начало списка
+            int nextSpace = array[space].next; // Получаем следующий свободный элемент
+            array[space].data = new ListElement(x); // Копируем объект в массив
+            array[space].next = head; // Соединяем с головой списка
+            head = space; // Обновляем голову
+            space = nextSpace; // Обновляем указатель на свободный элемент
+            return; // Завершаем метод
         }
 
-        // Вставка элемента в середину списка
-        if (prev(p.position) == -1) {
-            return; // Если позиция не найдена, выходим
-        }
+        // Если вставляем не в начало
+        if (getPrevious(p.position) == -1) return; // Проверяем существование предыдущего элемента
 
-        int nextSpace = memoryPool[space].next;
-        memoryPool[space].data = new ListElement(memoryPool[p.position].data); // Копируем данные текущей позиции
-        memoryPool[space].next = -1;
-        memoryPool[p.position].data = new ListElement(x); // Записываем новый элемент
-        memoryPool[p.position].next = space; // Обновляем указатель следующего
-        space = nextSpace; // Переносим указатель на свободное место
+        int nextSpace = array[space].next; // Получаем следующий свободный элемент
+        array[space].data = new ListElement(array[p.position].data); // Копируем данные из старого элемента
+        array[space].next = -1; // Указываем на конец списка
+        array[p.position].data = new ListElement(x); // Копируем новый объект
+        array[p.position].next = space; // Соединяем новый элемент с предыдущим
+        space = nextSpace; // Обновляем указатель на свободный элемент
     }
 
-    /**
-     * Метод Delete удаляет элемент из списка.
-     *
-     * @param p позиция элемента для удаления
-     */
+    // Метод для удаления элемента из списка
     public void Delete(Position p) {
-        if (head == -1) {
-            return; // Если список пуст, ничего не делаем
+        if (head == -1) return; // Если список пуст, ничего не делаем
+
+        if (p.position == head) { // Если удаляем элемент из начала списка
+            head = array[p.position].next; // Обновляем голову списка
+            array[p.position].next = space; // Освобождаем пространство
+            space = p.position; // Обновляем указатель на свободный элемент
         }
 
-        // Удаление первого элемента
-        if (p.position == head) {
-            head = memoryPool[p.position].next; // Устанавливаем голову на следующий элемент
-            memoryPool[p.position].next = space; // Возвращаем старую голову в свободные места
-            space = p.position; // Обновляем указатель на свободное место
-            return;
-        }
-
-        // Удаление элемента из середины или конца
-        int prev = prev(p.position); // Находим предыдущий элемент
-        if (prev != -1) {
-            int current = memoryPool[prev].next;
-            memoryPool[prev].next = memoryPool[current].next; // Обновляем указатель предыдущего
-            memoryPool[current].next = space; // Возвращаем текущий в свободные места
-            space = current; // Обновляем указатель свободного
-            p.position = memoryPool[prev].next; // Сдвигаем позицию
+        // Удаление элемента не из головы
+        int prev = getPrevious(p.position); // Получаем предыдущий элемент
+        if (prev != -1) { // Если предыдущий элемент существует
+            int current = array[prev].next; // Получаем текущий элемент
+            array[prev].next = array[current].next; // Соединяем предыдущий с следующим
+            array[current].next = space; // Освобождаем пространство
+            space = current; // Обновляем указатель на свободный элемент
+            p.position = array[prev].next; // Обновляем позицию
         }
     }
 
-    // Возвращает предыдущую позицию относительно заданной
+    // Метод для получения предыдущей позиции
     public Position Previous(Position p) {
-        // Проверяем корректность переданной позиции
-        if (p.position == -1 || p.position == head || p.position > memoryPool.length)
-            throw new RuntimeException("Invalid position");
-        int tmp = prev(p.position); // Получаем индекс предыдущего
-        if (tmp == -1) throw new RuntimeException("Invalid position");
-        return new Position(tmp);
+        if (p.position == -1 || p.position == head || p.position > array.length)
+            throw new RuntimeException();
+
+        int tmp = getPrevious(p.position); // Получаем предыдущую позицию
+        if (tmp == -1)
+            throw new RuntimeException();
+
+        return new Position(tmp); // Возвращаем предыдущую позицию
     }
 
-    // Возвращает элемент, находящийся в заданной позиции
+    // Метод для получения элемента по позиции
     public ListElement Retrieve(Position p) {
-        if (p.position > memoryPool.length) throw new RuntimeException("Invalid position");
-        if (prev(p.position) != -1 || p.position == head) {
-            return memoryPool[p.position].data; // Возвращаем данные элемента
+        if (p.position > array.length)
+            throw new RuntimeException();
+
+        if (getPrevious(p.position) != -1 || p.position == head) {
+            return array[p.position].data; // Возвращаем объект по позиции
         } else {
-            throw new RuntimeException("Invalid position");
+            throw new RuntimeException(); // Если позиции нет
         }
     }
 
-    // Возвращает следующую позицию относительно заданной
+    // Метод для получения следующей позиции
     public Position Next(Position p) {
-        if (p.position == head) return new Position(memoryPool[head].next);
+        if (p.position == head)
+            return new Position(array[head].next); // Если текущая позиция - голова
 
-        int tmpPrev = prev(p.position);
-        if (tmpPrev == -1) throw new RuntimeException("Invalid position");
-        tmpPrev = memoryPool[tmpPrev].next;
-        if (tmpPrev == -1) throw new RuntimeException("Invalid position");
+        int tmpPrev = getPrevious(p.position); // Получаем предыдущую позицию
+        if (tmpPrev == -1)
+            throw new RuntimeException(); // Если предыдущей позиции нет
 
-        return new Position(memoryPool[tmpPrev].next);
+        tmpPrev = array[tmpPrev].next; // Получаем следующую позицию
+        if (tmpPrev == -1)
+            throw new RuntimeException(); // Если следующей позиции нет
+
+        return new Position(array[tmpPrev].next); // Возвращаем следующую позицию
     }
 
-    // Поиск позиции элемента по значению
-    public Position locate(ListElement x) {
-        if (head == -1 || x == null) return null; // Если список пустой или элемент равен null
-        return findElement(x); // Возвращаем позицию найденного элемента
-    }
+    // Метод для поиска позиции элемента
+    public Position Locate(ListElement x) {
+        if (head == -1 || x == null)
+            return null; // Если список пуст или объект null, возвращаем null
+        int current = head; // Начинаем с головы списка
 
-    // Возвращает позицию за последним элементом
-    public Position End() {
-        return new Position(-1);
-    }
-
-    // Возвращает позицию первого элемента
-    public Position First() {
-        return new Position(head);
-    }
-
-    // Очищает список
-    public void MakeNull() {
-        head = -1; // Устанавливаем голову на -1, что означает пустой список
-    }
-
-    // Печатает все элементы списка
-    public void PrintList() {
-        if (head == -1) { // Если список пуст, выводим сообщение
-            System.out.println("List is empty");
-            return;
+        while (current != -1) { // Пока не достигнут конец списка
+            if (array[current].data.equals(x)) // Если найден элемент
+                return new Position(current); // Возвращаем позицию найденного элемента
+            current = array[current].next; // Переходим к следующему элементу
         }
-        int temp = head;
-        int i = 0;
-        // Итерируем список, пока не достигнем его конца
-        while (temp != -1) {
-            i++;
-            memoryPool[temp].data.Print(); // Вызываем метод печати данных
-            temp = memoryPool[temp].next; // Переходим к следующему узлу
+        return new Position(-1); // Если элемент не найден, возвращаем -1
+    }
+
+    // Метод для получения конца списка
+    public Position End() {
+        return new Position(-1); // Возвращаем -1, что обозначает конец
+    }
+
+    // Метод для получения первого элемента списка
+    public Position First() {
+        return new Position(head); // Возвращаем голову списка
+    }
+
+    // Метод для обнуления списка
+    public void MakeNull() {
+        head = -1; // Устанавливаем голову на -1 (пустой список)
+    }
+
+    // Метод для печати элементов списка
+    public void PrintList() {
+        if (head == -1) {
+            System.out.println("Список пуст"); // Если список пуст
+            return; // Завершаем метод
+        }
+        int temp = head; // Начинаем с головы
+
+        while (temp != -1) { // Пока не достигнут конец списка
+            array[temp].data.Print();
+            temp = array[temp].next; // Переходим к следующему элементу
         }
     }
 }
