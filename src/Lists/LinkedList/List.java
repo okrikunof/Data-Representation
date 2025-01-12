@@ -3,7 +3,7 @@ package Lists.LinkedList;
 import ListElement.ListElement;
 
 /**
- * Класс Lists.LinkedList предназначен для работы со списком элементов, хранящихся в узлах
+ * Класс LinkedList предназначен для работы со списком элементов, хранящихся в узлах
  */
 public class List {
 
@@ -91,8 +91,8 @@ public class List {
               2) Если голова не пуста, то вставляем в конец
             */
             else {
-                Node temp = last();
-                temp.next = new Node(new ListElement(x));
+                Node tmp = last();
+                tmp.next = new Node(new ListElement(x));
             }
             return;
         }
@@ -178,7 +178,7 @@ public class List {
             return head.data;
         }
         Node current = head;
-        while (current != null || prev(p.node) != null) {
+        while (current != null) {
             if (current.data.Equals(p.node.data)) {
                 return current.data;
             }
