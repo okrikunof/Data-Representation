@@ -14,17 +14,24 @@ public class Map {
         list = new List();
     }
 
-    private Position findViaKey(ListElement x) {
+    private static boolean compareCharArrays(char[] value1, char[] value2) {
+        int len = Math.min(value1.length, value2.length);
+        for (int i = 0; i < len; i++) {
+            if (value1[i] == '0' || value2[i] == '0') continue;
+            if (value1[i] != value2[i]) return false;
+        }
+        return true;
+    }
+
+    private Position findViaKey(char[] key) {
         Position position = list.First();
 
         while (!position.Equals(list.End())) {
-            ListElement current = list.Retrieve(position);
-            if (x.Equals(current.GetName())) {
+            ListElement temp = list.Retrieve(position);
+            if (compareCharArrays(key, temp.GetName()))
                 return position;
-            }
             position = list.Next(position);
         }
-
         return position;
     }
 
@@ -32,29 +39,28 @@ public class Map {
         list.MakeNull();
     }
 
-    public void Assign(ListElement x) {
-        // 1. Если список пустой, добавляем первым
+    public void Assign(char[] d, char[] r) {
+        // Если список пустой, добавляем первым элементом
         if (list.First().Equals(list.End())) {
-            list.Insert(x, list.First());
+            list.Insert(new ListElement(d, r), list.First());
             return;
         }
 
-        Position position = findViaKey(x);
-        if (!position.Equals(list.End())) {
-            list.Retrieve(position).SetAddress(x.GetAddress());
+        Position position = findViaKey(d);
+        if(!position.Equals(list.End())) {
+            list.Retrieve(position).SetAddress(r);
             return;
         }
 
-        // 2. Если ключ не найден вставляем на первое место
-        list.Insert(new ListElement(x), list.First());
+        // Если ключ не найден, вставляем на первую позицию
+        list.Insert(new ListElement(d,r), list.First()) ;
     }
 
-    public boolean Compute(ListElement x) {
-        Position position = findViaKey(x);
-        if (position.Equals(list.End())) {
+    public boolean Compute(char[] d, char[] r) {
+        Position position = findViaKey(d);
+        if(position.Equals(list.End()))
             return false;
-        }
-        list.Retrieve(position).SetAddress(x.GetAddress());
+        list.Retrieve(position).SetAddress(r);
         return true;
     }
 

@@ -17,72 +17,79 @@ public class Map {
         this.head = null;
     }
 
+    private static boolean compareCharArrays(char[] value1, char[] value2) {
+        int len = Math.min(value1.length, value2.length);
+        for (int i = 0; i < len; i++) {
+            if (value1[i] == '0' || value2[i] == '0') continue;
+            if (value1[i] != value2[i]) return false;
+        }
+        return true;
+    }
+
     /**
      * Метод для поиска узла по ключу.
      * Перебирает все элементы карты, чтобы найти узел с указанным ключом.
      *
-     * @param x элемент, ключ которого нужно найти в карте
+     * @param d элемент, ключ которого нужно найти в карте
      * @return найденный узел или null, если ключ не найден
      */
-    private Node findViaKey(ListElement x) {
-        Node key = head; // Начинаем с головы списка
+    private Node findViaKey(char[] d) {
+        Node key = head;
         while (key != null) {
-            // Если ключ найден, возвращаем узел
-            if (key.data.Equals(x.GetName())) {
+            if (compareCharArrays(key.data.GetName(), d)) {
                 return key;
             }
-            key = key.next; // Переходим к следующему узлу
+            key = key.next;
         }
-        return null; // Если ключ не найден, возвращаем null
+        return null;
     }
 
     /**
      * Метод для очистки карты.
-     * Устанавливает head в null, effectively очищая все элементы карты.
+     * Устанавливает head в null, очищая все элементы карты.
      */
     public void MakeNull() {
-        this.head = null; // Очищаем карту, устанавливая голову в null
+        this.head = null; // Очищаем отображение, устанавливая голову в null
     }
 
     /**
      * Метод для добавления или обновления элемента в карте.
      * Если ключ уже существует, обновляет значение, иначе вставляет новый элемент в начало списка.
-     *
-     * @param x элемент, который нужно добавить или обновить в карте
      */
-    public void Assign(ListElement x) {
-        // 1. Если список пустой, создаем новый узел и присваиваем его как голову
+    public void Assign(char[] d, char[] r) {
+        //Если список пустой, создаем голову, нет смысла искать ключ
         if (head == null) {
-            head = new Node(x, null); // Присваиваем x как первый элемент списка
+            head = new Node(d, r, null);
             return;
         }
 
-        // 2. Ищем узел по ключу
-        Node node = findViaKey(x);
+        //Поиск по ключу. Если найден, вставить значение
+        Node node = findViaKey(d);
         if (node != null) {
-            node.SetAddress(x); // Если ключ найден, обновляем его значение
+            node.SetAddress(r);
             return;
         }
 
-        // 3. Если ключ не найден, вставляем новый узел в начало списка
-        head.next = new Node(x, head.next); // Новый элемент вставляется после головы
+        //Если ключ не найдет, то вставляем сразу после головы, чтобы было быстро
+        if (head.next == null) {
+            head.next = new Node(d, r, null);
+            return;
+        }
+
+        head.next = new Node(d, r, head.next);
     }
 
     /**
      * Метод для вычисления значения по ключу.
      * Если элемент с заданным ключом существует, обновляет его значение и возвращает true.
      * Если элемент не найден, возвращает false.
-     *
-     * @param x элемент, значение которого нужно вычислить
-     * @return true, если элемент найден и обновлен, false если не найден
      */
-    public boolean Compute(ListElement x) {
-        Node node = findViaKey(x);
-        if (node == null) {
-            return false; // Если ключ не найден, возвращаем false
-        }
-        node.SetAddress(x); // Обновляем значение по ключу
-        return true; // Возвращаем true, если обновление прошло успешно
+    public boolean Compute(char[] d, char[] r) {
+        Node node = findViaKey(d);
+        if (node == null)
+            return false;
+        node.SetAddress(r);
+        return true;
     }
 
     /**

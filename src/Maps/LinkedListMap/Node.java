@@ -11,7 +11,12 @@ public class Node {
         this.next = next; // Инициализация ссылки на следующий узел
     }
 
-    public void SetAddress(ListElement value) {
-        this.data.SetAddress(value.GetAddress()); // Устанавливаем новый адрес в данные узла
+    public Node(char[] name, char[] address, Node node) {
+        next = node;
+        data = new ListElement(name, address);
+    }
+
+    public void SetAddress(char[] value) {
+        this.data.SetAddress(value); // Устанавливаем новый адрес в данные узла
     }
 }

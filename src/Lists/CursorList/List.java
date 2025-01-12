@@ -9,7 +9,7 @@ import ListElement.ListElement;
 public class List {
     private int head; // Указатель на начало списка,  -1 (пустой список)
     private static int space = 0; // Указатель на первый свободный элемент в массиве
-    private static final int LENGTH = 100; // Длина массива, которая будет использоваться для хранения элементов
+    private static final int LENGTH = 10; // Длина массива, которая будет использоваться для хранения элементов
     private static Node[] array; // Массив узлов
 
     public List() {

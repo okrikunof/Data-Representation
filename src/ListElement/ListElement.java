@@ -5,6 +5,12 @@ public class ListElement {
     private char[] name;    // имя (до 20 символов)
     private char[] address; // адрес (до 50 символов)
 
+    public void SetAddress(char[] address) {
+        this.address = new char[50];
+        for (int i = 0; i < address.length; i++)
+            this.address[i] = address[i];
+    }
+
     /** Конструктор, инициализирующий открытку с именем и адресом */
     public ListElement(String addName, String addAddress) {
         this.name = new char[20];
@@ -32,6 +38,26 @@ public class ListElement {
             this.address[addAddress.length()] = '\0';
         }
     }
+
+    public ListElement(char[] addName, char[] addAddress) {
+        this.name = new char[20];
+        this.address = new char[50];
+
+        for (int i = 0; i < (20 - addName.length < 0 ? 20 : addName.length); i++) {
+            this.name[i] = addName[i];
+        }
+        if (addName.length < 20) {
+            this.name[addName.length] = '\0';
+        }
+
+        for (int i = 0; i < (50 - addAddress.length < 0 ? 50 : addAddress.length); i++) {
+            this.address[i] = addAddress[i];
+        }
+        if (addAddress.length < 50) {
+            this.address[addAddress.length] = '\0';
+        }
+    }
+
 
     // Копирующий конструктор для того, чтобы передавать в функции операций списка
     public ListElement(ListElement other) {
@@ -68,14 +94,6 @@ public class ListElement {
 
     public char[] GetAddress() {
         return this.address;
-    }
-
-    public void SetName(char[] name) {
-        this.name = name;
-    }
-
-    public void SetAddress(char[] address) {
-        this.address = address;
     }
 
     // Метод для вывод содержимого на экран
