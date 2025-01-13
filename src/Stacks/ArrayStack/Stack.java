@@ -1,26 +1,26 @@
 package Stacks.ArrayStack;
 
-import ListElement.ListElement;
-
 public class Stack {
-    private ListElement[] stack;
+    private char[] stack;
     private static final int SIZE = 100;
     private int top;
 
     public Stack() {
-        stack = new ListElement[SIZE];
+        stack = new char[SIZE];
         top = -1;
     }
 
-    public void Push(ListElement x) {
-        stack[++top] = x;
+    public void Push(char[] name) {
+        for (int i = 0; i < name.length; i++) {
+            stack[++top] = name[i];
+        }
     }
 
-    public ListElement Pop() {
+    public char Pop() {
         return stack[top--];
     }
 
-    public ListElement Top() {
+    public char Top() {
         return stack[top];
     }
 

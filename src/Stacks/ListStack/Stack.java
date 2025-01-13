@@ -21,11 +21,14 @@ public class Stack {
      * Метод для добавления элемента в стек.
      * Новый элемент добавляется в начало списка (верх стека).
      *
-     * @param x элемент, который будет добавлен в стек
+     * @param name элемент, который будет добавлен в стек
      */
-    public void Push(ListElement x) {
-        head = new Node(x, head); // Новый элемент становится верхним элементом
+    public void Push(char[] name) {
+        for (int i = 0; i < name.length; i++) { // Идем с конца строки, чтобы первый символ оказался на вершине стека
+            head = new Node(name[i], head); // Создаем новый узел для каждого символа
+        }
     }
+
 
     /**
      * Метод для удаления и возврата верхнего элемента стека.
@@ -33,18 +36,23 @@ public class Stack {
      *
      * @return верхний элемент стека
      */
-    public ListElement Pop() {
-        ListElement data = head.data; // Сохраняем данные верхнего элемента
-        head = head.next; // Перемещаем указатель на следующий элемент (теперь он верхний)
-        return data; // Возвращаем данные удаленного элемента
+    public char Pop() {
+        if (head == null) { // Проверяем, пуст ли стек
+            throw new RuntimeException("Stack is empty");
+        }
+
+        char data = head.data; // Сохраняем символ верхнего элемента
+        head = head.next; // Перемещаем указатель на следующий элемент
+        return data; // Возвращаем удаленный символ
     }
+
 
     /**
      * Метод для получения верхнего элемента стека, не удаляя его.
      *
      * @return верхний элемент стека
      */
-    public ListElement Top() {
+    public char Top() {
         return head.data; // Возвращаем данные верхнего элемента
     }
 

@@ -1,6 +1,6 @@
 package Stacks.AdtStack;
 
-import ListElement.*;
+import ListElement.ListElement;
 
 import Lists.ArrayList.*;
 //import Lists.LinkedList.*;

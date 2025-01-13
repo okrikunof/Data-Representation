@@ -58,7 +58,6 @@ public class ListElement {
         }
     }
 
-
     // Копирующий конструктор для того, чтобы передавать в функции операций списка
     public ListElement(ListElement other) {
         this.name = new char[20];

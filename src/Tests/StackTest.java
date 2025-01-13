@@ -10,21 +10,21 @@ public class StackTest {
     public static void Test() {
         Stack stack = new Stack();
 
-        stack.Push(new ListElement("Paris", "France"));
-        stack.Top().Print();
-        stack.Push(new ListElement("London", "England"));
-        stack.Top().Print();
-        stack.Push(new ListElement("Moscow", "Russia"));
-        stack.Top().Print();
-        stack.Push(new ListElement("Berlin", "Germany"));
-        stack.Top().Print();
-        stack.Push(new ListElement("Sofia", "Bulgaria"));
-        stack.Top().Print();
+        stack.Push("Paris".toCharArray());
+        System.out.println(stack.Top());
+        stack.Push("London".toCharArray());
+        System.out.println(stack.Top());
+        stack.Push("Moscow".toCharArray());
+        System.out.println(stack.Top());
+        stack.Push("Berlin".toCharArray());
+        System.out.println(stack.Top());
+        stack.Push("Sofia".toCharArray());
+        System.out.println(stack.Top());
 
         System.out.println();
         System.out.println("Достаем элементы");
         while(!stack.Empty()){
-            stack.Pop().Print();
+            System.out.println(stack.Pop());
         }
     }
 }
