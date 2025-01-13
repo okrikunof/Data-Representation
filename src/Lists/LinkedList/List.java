@@ -86,14 +86,13 @@ public class List {
             if (head == null) {
                 // создать новый объект класса Node(x) и присвоить head
                 head = new Node(new ListElement(x));
+                return;
             }
             /*
               2) Если голова не пуста, то вставляем в конец
             */
-            else {
-                Node tmp = last();
-                tmp.next = new Node(new ListElement(x));
-            }
+            Node tmp = last();
+            tmp.next = new Node(new ListElement(x));
             return;
         }
 
@@ -112,22 +111,19 @@ public class List {
           создаем переменную для предыдущего элемента
         */
         Node prev = prev(p.node);
-        if (prev != null) {
-            // если вставляем в конец списка
-            if (prev.next == null) {
-                prev.next = new Node(x);
-                return;
-            }
-            // вставляем в середину списка
-            Node tempNext = new Node();
-            Node next = p.node.next;
-
-            p.node.next = tempNext;
-            tempNext.next = next;
-
-            p.node.next.data = p.node.data;
-            p.node.data = new ListElement(x);
+        if (prev == null) {
+            throw new RuntimeException("Invalid position");
         }
+
+        // вставляем в середину списка
+        Node tempNext = new Node();
+        Node next = p.node.next;
+
+        p.node.next = tempNext;
+        tempNext.next = next;
+
+        p.node.next.data = p.node.data;
+        p.node.data = new ListElement(x);
     }
 
     /**
