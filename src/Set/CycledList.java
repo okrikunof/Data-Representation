@@ -7,6 +7,14 @@ public class CycledList {
     private Node head;        // указатель на начало списка
     private Node tail;        // указатель на конец списка
 
+    public Node getHead() {
+        return head;
+    }
+
+    public Node getTail() {
+        return tail;
+    }
+
     /**
      * Инициализирующий конструктор класса
      */
@@ -168,7 +176,7 @@ public class CycledList {
      * @param element элемент, который нужно найти
      * @return true, если элемент найден, false в противном случае
      */
-    private boolean findElement(int element) {
+    public boolean findElement(int element) {
         if (isEmpty()) {
             return false; // Если список пуст, элемент не найден
         }
