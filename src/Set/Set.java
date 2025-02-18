@@ -24,7 +24,7 @@ public class Set {
     }
 
 
-    public boolean contains(int element) {
+    public boolean member(int element) {
         if (cycledList.findElement(element)) {
             return true;
         }
@@ -41,16 +41,18 @@ public class Set {
      * @return новое множество, содержащее все уникальные элементы из a и b
      */
     public static Set union(Set a, Set b) {
-        Set union = new Set(); // Создаем пустое множество для результата
-        Set bCopy = new Set(b);
 
+        Set union = new Set(); // Создаем пустое множество для результата
         // Если оба множества пустые, возвращаем пустое множество
-        if (a.cycledList.isEmpty() && bCopy.cycledList.isEmpty()) {
+        if (a.cycledList.isEmpty() && b.cycledList.isEmpty()) {
             return union;
         }
 
+        Set aCopy = new Set(a);
+        Set bCopy = new Set(b);
+
         // Указатели для прохода по множествам
-        Node currentA = a.cycledList.getHead();
+        Node currentA = aCopy.cycledList.getHead();
         Node currentB = bCopy.cycledList.getHead();
 
         // Флаги для отслеживания завершения прохода по множествам
@@ -70,7 +72,7 @@ public class Set {
                 // Если множество B закончилось, добавляем оставшиеся элементы из A
                 union.insert(currentA.getData());
                 currentA = currentA.getNext();
-                if (currentA == a.cycledList.getHead()) {
+                if (currentA == aCopy.cycledList.getHead()) {
                     isAFinished = true;
                 }
             } else {
@@ -82,7 +84,7 @@ public class Set {
                     // Добавляем элемент из A
                     union.insert(dataA);
                     currentA = currentA.getNext();
-                    if (currentA == a.cycledList.getHead()) {
+                    if (currentA == aCopy.cycledList.getHead()) {
                         isAFinished = true;
                     }
                 } else if (dataA > dataB) {
@@ -97,7 +99,7 @@ public class Set {
                     union.insert(dataA);
                     currentA = currentA.getNext();
                     currentB = currentB.getNext();
-                    if (currentA == a.cycledList.getHead()) {
+                    if (currentA == aCopy.cycledList.getHead()) {
                         isAFinished = true;
                     }
                     if (currentB == bCopy.cycledList.getHead()) {
@@ -107,6 +109,10 @@ public class Set {
             }
         }
 
+        System.out.print("A: ");
+        aCopy.print();
+        System.out.print("B: ");
+        bCopy.print();
         System.out.print("A ∪ B : ");
         union.print();
 
@@ -116,13 +122,13 @@ public class Set {
 
     public static Set intersection(Set a, Set b) {
         Set intersection = new Set(); // Создаем пустое множество для результата
-        Set aCopy = new Set(a);
-        Set bCopy = new Set(b);
-
         // Если одно из множеств пустое, возвращаем пустое множество
-        if (aCopy.cycledList.isEmpty() || bCopy.cycledList.isEmpty()) {
+        if (a.cycledList.isEmpty() || b.cycledList.isEmpty()) {
             return intersection;
         }
+
+        Set aCopy = new Set(a);
+        Set bCopy = new Set(b);
 
         // Указатели для прохода по множествам
         Node currentA = aCopy.cycledList.getHead();
@@ -163,6 +169,10 @@ public class Set {
             }
         }
 
+        System.out.print("A: ");
+        aCopy.print();
+        System.out.print("B: ");
+        bCopy.print();
         System.out.print("A ∩ B : ");
         intersection.print();
 
@@ -172,18 +182,18 @@ public class Set {
 
     public static Set difference(Set a, Set b) {
         Set difference = new Set(); // Создаем пустое множество для результата
-        Set aCopy = new Set(a);
-        Set bCopy = new Set(b);
-
         // Если множество a пустое, возвращаем пустое множество
-        if (aCopy.cycledList.isEmpty()) {
+        if (a.cycledList.isEmpty()) {
             return difference;
         }
 
         // Если множество b пустое, возвращаем копию множества a
-        if (bCopy.cycledList.isEmpty()) {
+        if (b.cycledList.isEmpty()) {
             return new Set(a);
         }
+
+        Set aCopy = new Set(a);
+        Set bCopy = new Set(b);
 
         // Указатели для прохода по множествам
         Node currentA = aCopy.cycledList.getHead();
@@ -233,6 +243,10 @@ public class Set {
             }
         }
 
+        System.out.print("A: ");
+        aCopy.print();
+        System.out.print("B: ");
+        bCopy.print();
         System.out.print("A \\ B : ");
         difference.print();
 
