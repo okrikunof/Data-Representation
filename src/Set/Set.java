@@ -24,15 +24,6 @@ public class Set {
     }
 
 
-    public boolean member(int element) {
-        if (cycledList.findElement(element)) {
-            return true;
-        }
-
-        return false;
-    }
-
-
     /**
      * Метод для объединения двух множеств
      *
@@ -56,8 +47,10 @@ public class Set {
         Node currentB = bCopy.cycledList.getHead();
 
         // Флаги для отслеживания завершения прохода по множествам
-        boolean isAFinished = (currentA == null);
-        boolean isBFinished = (currentB == null);
+        boolean isAFinished = false;
+        boolean isBFinished = false;
+        int dataA;
+        int dataB;
 
         // Проходим по обоим множествам одновременно
         while (!isAFinished || !isBFinished) {
@@ -77,8 +70,8 @@ public class Set {
                 }
             } else {
                 // Сравниваем текущие элементы из A и B
-                int dataA = currentA.getData();
-                int dataB = currentB.getData();
+                dataA = currentA.getData();
+                dataB = currentB.getData();
 
                 if (dataA < dataB) {
                     // Добавляем элемент из A
@@ -137,11 +130,13 @@ public class Set {
         // Флаги для отслеживания завершения прохода по множествам
         boolean isAFinished = false;
         boolean isBFinished = false;
+        int dataA;
+        int dataB;
 
         // Проходим по обоим множествам одновременно
         while (!isAFinished && !isBFinished) {
-            int dataA = currentA.getData();
-            int dataB = currentB.getData();
+            dataA = currentA.getData();
+            dataB = currentB.getData();
 
             if (dataA < dataB) {
                 // Если элемент из A меньше, перемещаем указатель A вперед
@@ -202,11 +197,13 @@ public class Set {
         // Флаги для отслеживания завершения прохода по множествам
         boolean isAFinished = false;
         boolean isBFinished = false;
+        int dataA;
+        int dataB;
 
         // Проходим по обоим множествам одновременно
         while (!isAFinished) {
-            int dataA = currentA.getData();
-            int dataB = currentB.getData();
+            dataA = currentA.getData();
+            dataB = currentB.getData();
 
             if (dataA < dataB) {
                 // Если элемент из A меньше, добавляем его в результат
@@ -255,6 +252,45 @@ public class Set {
 
 
     /**
+     * Метод для проверки равенства двух множеств
+     *
+     * @param A первое множество
+     * @param B второе множество
+     * @return true, если множества равны, иначе false
+     */
+    public static boolean equal(Set A, Set B) {
+        // Если оба множества пустые, они равны
+        if (A.cycledList.isEmpty() && B.cycledList.isEmpty()) {
+            return true;
+        }
+
+        // Если одно из множеств пустое, а другое нет, они не равны
+        if (A.cycledList.isEmpty() || B.cycledList.isEmpty()) {
+            return false;
+        }
+
+        // Указатели для прохода по множествам
+        Node currentA = A.cycledList.getHead();
+        Node currentB = B.cycledList.getHead();
+
+        // Проходим по обоим множествам одновременно
+        do {
+            // Если элементы не равны, множества не равны
+            if (currentA.getData() != currentB.getData()) {
+                return false;
+            }
+
+            // Переходим к следующим элементам
+            currentA = currentA.getNext();
+            currentB = currentB.getNext();
+        } while (currentA != A.cycledList.getHead() && currentB != B.cycledList.getHead());
+
+        // Если мы дошли до конца обоих множеств, они равны
+        return currentA == A.cycledList.getHead() && currentB == B.cycledList.getHead();
+    }
+
+
+    /**
      * Метод для присваивания множества b множеству a
      *
      * @param a множество, в которое будет записано значение
@@ -282,9 +318,51 @@ public class Set {
     }
 
 
+    /**
+     * Метод для объединения двух множеств A и B в множество C.
+     * Результат будет не определен, если A и B имеют общие элементы.
+     *
+     * @param A первое множество
+     * @param B второе множество
+     * @throws RuntimeException если множества A и B пересекаются
+     */
+    public static Set merge(Set A, Set B) {
+        // Проверяем, пересекаются ли множества A и B
+        Set intersection = intersection(A, B);
+        if (!intersection.cycledList.isEmpty()) {
+            throw new RuntimeException("Множества A и B пересекаются. Операция MERGE не может быть выполнена.");
+        }
+
+        // Если множества не пересекаются, выполняем объединение
+        Set unionResult = union(A, B);
+        return unionResult;
+    }
+
+
+    public Set makeNull(Set set) {
+        Set emptySet = new Set();
+    }
+
+    public boolean find(int x) {
+        if (this.cycledList.findElement(x)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static boolean member(Set set, int element) {
+        if (set.cycledList.findElement(element)) {
+            return true;
+        }
+
+        return false;
+    }
+
+
     public int min() {
         if (cycledList.isEmpty()) {
-            throw new RuntimeException("Set is empty");
+            throw new RuntimeException("Множество пустое");
         }
 
         return cycledList.getHead().getData();
@@ -293,7 +371,7 @@ public class Set {
 
     public int max() {
         if (cycledList.isEmpty()) {
-            throw new RuntimeException("Set is empty");
+            throw new RuntimeException("Множество пустое");
         }
 
         return cycledList.getTail().getData();
@@ -303,6 +381,4 @@ public class Set {
     public void print() {
         cycledList.printSet();
     }
-
-
 }

@@ -1,83 +1,95 @@
 package Set;
 
 /**
- * Класс множества, который представляет собой закольцованный список, хранящий указатель на последний элемент
+ * Класс множества, который представляет собой закольцованный список, хранящий указатель на последний элемент.
+ * Список отсортирован по возрастанию.
  */
 public class CycledList {
-    private Node tail; // указатель на конец списка
+    private Node tail; // Указатель на последний элемент списка (хвост)
 
     /**
-     * Инициализирующий конструктор класса
+     * Инициализирующий конструктор класса.
+     * Создает пустой список.
      */
     public CycledList() {
-        this.tail = null;
+        this.tail = new Node(); // Инициализируем tail как null, так как список пуст
     }
 
+
     /**
-     * Копирующий конструктор
-     * @param cycledList ссылка на множество, которое надо скопировать
+     * Копирующий конструктор.
+     * Создает копию существующего списка.
+     *
+     * @param cycledList Ссылка на список, который нужно скопировать.
      */
     public CycledList(CycledList cycledList) {
+        // Если исходный список пуст или равен null, создаем пустой список
         if (cycledList == null || cycledList.isEmpty()) {
             this.tail = null;
             return;
         }
 
-        // Копируем первый элемент
-        Node currentOriginal = cycledList.getHead();
-        this.tail = new Node(currentOriginal.getData());
-        this.tail.setNext(this.tail); // Замыкаем список на себя
+        // Копируем первый элемент исходного списка
+        Node currentOriginal = cycledList.getHead(); // Получаем голову исходного списка
+        this.tail = new Node(currentOriginal.getData()); // Создаем новый узел с данными из головы
+        this.tail.setNext(this.tail); // Замыкаем список на себя (так как пока только один элемент)
 
-        Node currentCopy = this.tail;
-        currentOriginal = currentOriginal.getNext();
+        Node currentCopy = this.tail; // Указатель на текущий узел в новом списке
+        currentOriginal = currentOriginal.getNext(); // Переходим к следующему элементу исходного списка
 
-        // Копируем остальные элементы
+        // Копируем остальные элементы исходного списка
         while (currentOriginal != cycledList.getHead()) {
-            Node newNode = new Node(currentOriginal.getData());
-            currentCopy.setNext(newNode);
-            currentCopy = newNode;
-            currentOriginal = currentOriginal.getNext();
+            Node newNode = new Node(currentOriginal.getData()); // Создаем новый узел с данными
+            currentCopy.setNext(newNode); // Связываем текущий узел с новым
+            currentCopy = newNode; // Перемещаем указатель на новый узел
+            currentOriginal = currentOriginal.getNext(); // Переходим к следующему элементу исходного списка
         }
 
-        // Замыкаем список
+        // Замыкаем список, связывая последний узел с головой
         currentCopy.setNext(this.tail);
-        this.tail = currentCopy;
+        this.tail = currentCopy; // Обновляем tail на последний скопированный узел
     }
 
+
     /**
-     * Метод возвращающий true, если множество пустое, false в противном случае
+     * Метод для проверки, пуст ли список.
+     *
+     * @return true, если список пуст, иначе false.
      */
     public boolean isEmpty() {
-        return tail == null;
+        return tail == null; // Список пуст, если tail равен null
     }
 
     /**
-     * Метод для получения головы списка
-     * @return первый элемент списка
+     * Метод для получения головы списка (первого элемента).
+     *
+     * @return Первый элемент списка.
      */
     public Node getHead() {
-        if (isEmpty()) {
-            return null;
-        }
         return tail.getNext(); // Голова списка — это следующий элемент после tail
     }
 
-    /**
-     * Метод для получения хвоста списка
-     * @return последний элемент списка
-     */
-    public Node getTail() {
-        return tail;
-    }
 
     /**
-     * Метод для вставки элемента в список
-     * @param element элемент для вставки
+     * Метод для получения хвоста списка (последнего элемента).
+     *
+     * @return Последний элемент списка.
+     */
+    public Node getTail() {
+        return tail; // Возвращаем tail
+    }
+
+
+    /**
+     * Метод для вставки элемента в список.
+     * Элемент вставляется в отсортированную позицию.
+     *
+     * @param element Элемент для вставки.
      */
     public void insert(int element) {
         // Если список пуст, создаем новый узел и делаем его tail
         if (isEmpty()) {
-            tail = new Node(element);
+            tail = new Node(element); // Создаем новый узел
             tail.setNext(tail); // Замыкаем список на себя
             return;
         }
@@ -87,44 +99,47 @@ public class CycledList {
             return;
         }
 
-        // Создаем новый узел
+        // Создаем новый узел для вставки
         Node newNode = new Node(element);
 
         // Если элемент меньше головы списка, он становится новой головой
         if (element < getHead().getData()) {
-            newNode.setNext(getHead());
-            tail.setNext(newNode); // Обновляем tail, чтобы он указывал на новую голову
+            newNode.setNext(getHead()); // Новый узел указывает на текущую голову
+            tail.setNext(newNode); // Tail теперь указывает на новую голову
         }
         // Если элемент больше tail, он становится новым tail
         else if (element > tail.getData()) {
-            newNode.setNext(getHead());
-            tail.setNext(newNode);
-            tail = newNode;
+            newNode.setNext(getHead()); // Новый узел указывает на голову
+            tail.setNext(newNode); // Текущий tail указывает на новый узел
+            tail = newNode; // Новый узел становится tail
         }
         // Если элемент находится между head и tail, вставляем его в правильную позицию
         else {
-            Node current = getHead();
+            Node current = getHead(); // Начинаем с головы списка
             // Ищем позицию для вставки
             while (current.getNext() != getHead() && current.getNext().getData() < element) {
-                current = current.getNext();
+                current = current.getNext(); // Переходим к следующему узлу
             }
             // Вставляем новый узел после current
-            newNode.setNext(current.getNext());
-            current.setNext(newNode);
+            newNode.setNext(current.getNext()); // Новый узел указывает на следующий узел current
+            current.setNext(newNode); // Current теперь указывает на новый узел
         }
     }
 
+
     /**
-     * Метод для удаления элемента из списка
-     * @param element элемент для удаления
+     * Метод для удаления элемента из списка.
+     *
+     * @param element Элемент для удаления.
      */
     public void delete(int element) {
+        // Если список пуст, выводим сообщение и завершаем выполнение
         if (isEmpty()) {
-            System.out.println("List is empty");
+            System.out.println("Множество пустое");
             return;
         }
 
-        // Если элемент не найден в списке
+        // Если элемент не найден в списке, выводим сообщение и завершаем выполнение
         if (!findElement(element)) {
             System.out.println("Element not found");
             return;
@@ -132,7 +147,7 @@ public class CycledList {
 
         // Случай, когда элемент — единственный в списке
         if (tail.getNext() == tail && tail.getData() == element) {
-            tail = null;
+            tail = null; // Обнуляем tail, так как список теперь пуст
             return;
         }
 
@@ -144,30 +159,34 @@ public class CycledList {
 
         // Случай, когда элемент находится в tail
         if (tail.getData() == element) {
-            Node current = getHead();
+            Node current = getHead(); // Начинаем с головы списка
+            // Ищем узел, предшествующий tail
             while (current.getNext() != tail) {
-                current = current.getNext();
+                current = current.getNext(); // Переходим к следующему узлу
             }
-            current.setNext(getHead()); // Удаляем tail и обновляем ссылку
-            tail = current; // Обновляем tail
+            current.setNext(getHead()); // Удаляем tail, связывая предыдущий узел с головой
+            tail = current; // Обновляем tail на предыдущий узел
             return;
         }
 
         // Случай, когда элемент находится в середине списка
-        Node current = getHead();
+        Node current = getHead(); // Начинаем с головы списка
+        // Ищем узел, предшествующий узлу с элементом
         while (current.getNext().getData() != element) {
-            current = current.getNext();
+            current = current.getNext(); // Переходим к следующему узлу
         }
+        // Удаляем узел с элементом, связывая current с узлом после удаляемого
         current.setNext(current.getNext().getNext());
     }
 
+
     /**
-     * Метод для печати списка
+     * Метод для печати списка.
      */
     public void printSet() {
         // Если список пуст, выводим сообщение и завершаем выполнение
         if (isEmpty()) {
-            System.out.println("List is empty");
+            System.out.println("Множество пустое");
             return;
         }
 
@@ -183,22 +202,26 @@ public class CycledList {
         System.out.println(); // Переход на новую строку после вывода всех элементов
     }
 
+
     /**
-     * Метод для поиска элемента в списке
-     * @param element элемент, который нужно найти
-     * @return true, если элемент найден, false в противном случае
+     * Метод для поиска элемента в списке.
+     *
+     * @param element Элемент, который нужно найти.
+     * @return true, если элемент найден, false в противном случае.
      */
     public boolean findElement(int element) {
+        // Если список пуст, элемент не найден
         if (isEmpty()) {
-            return false; // Если список пуст, элемент не найден
+            return false;
         }
 
-        Node current = getHead();
+        Node current = getHead(); // Начинаем с головы списка
         do {
+            // Если текущий узел содержит искомый элемент, возвращаем true
             if (current.getData() == element) {
-                return true; // Элемент найден
+                return true;
             }
-            current = current.getNext();
+            current = current.getNext(); // Переходим к следующему узлу
         } while (current != getHead()); // Продолжаем, пока не вернемся к голове
 
         return false; // Элемент не найден
